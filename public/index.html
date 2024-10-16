@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>Simple Chat</title>
+    <style>
+      body {
+          font-family: Arial, sans-serif;
+          margin: 50px;
+      }
+      #chatContainer {
+          max-width: 500px;
+          margin: 0 auto;
+      }
+      #messageInput {
+          width: 100%;
+          padding: 10px;
+          font-size: 16px;
+      }
+      #sendButton {
+          padding: 10px 20px;
+          font-size: 16px;
+          margin-top: 10px;
+          width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+
+    <div id="keyContainer">
+      <form action="/submit" method="POST">
+        <label for="password">AIML Key</label>
+        <input type="password" id="password" name="password" autocomplete="current-password" required>
+      </form>
+    </div>
+
+
+    <div id="chatContainer">
+      <h2>Simple Chat</h2>
+      <input type="text" id="messageInput" placeholder="Type your message here..." autocomplete="off">
+      <button id="sendButton">Send</button>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
