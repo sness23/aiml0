@@ -25,6 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
         .then(data => {
             if (data.success) {
                 console.log('Message sent successfully.');
+                console.log(data);
                 messageInput.value = '';
                 const messageElement = document.createElement('div');
                 messageElement.textContent = data.response.text;
