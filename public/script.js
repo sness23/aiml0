@@ -1,13 +1,18 @@
 document.addEventListener('DOMContentLoaded', () => {
     const messageInput = document.getElementById('messageInput');
     const sendButton = document.getElementById('sendButton');
+    const chat = document.getElementById('chat');
 
     function sendMessage() {
-        const message = messageInput.value.trim();
+        const message = messageInput.value.trim();        
         if (message === '') {
             alert('Please enter a message.');
             return;
         }
+
+        const messageElement = document.createElement('div');
+        messageElement.textContent = message;
+        chat.appendChild(messageElement);
 
         fetch('/message', {
             method: 'POST',
@@ -20,7 +25,10 @@ document.addEventListener('DOMContentLoaded', () => {
         .then(data => {
             if (data.success) {
                 console.log('Message sent successfully.');
-                messageInput.value = ''; // Clear the input field
+                messageInput.value = '';
+                const messageElement = document.createElement('div');
+                messageElement.textContent = data.response.text;
+                chat.appendChild(messageElement);
             } else {
                 alert('Error sending message: ' + data.error);
             }
@@ -36,6 +44,13 @@ document.addEventListener('DOMContentLoaded', () => {
     messageInput.addEventListener('keypress', (event) => {
         if (event.key === 'Enter') {
             sendMessage();
+        }
+    });
+
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') {
+            event.preventDefault();
+            messageInput.focus();
         }
     });
 });
