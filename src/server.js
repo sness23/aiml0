@@ -40,6 +40,12 @@ function doCompletion(message, callback) {
     });
 }
 
+function sleepBlocking(ms) {
+  const endTime = Date.now() + ms;
+  while (Date.now() < endTime) {
+  }
+}
+
 app.post('/message', (req, res) => {
     let in_message = req.body.message;
     let pre_message = in_message.substring(1);
@@ -51,6 +57,32 @@ app.post('/message', (req, res) => {
         message = "Please give a detailed overview in a conversational style for an expert scientist of the cancer IDH-wildtype glioblastoma";
     }
 
+    if (sequence == "1") {
+        sleepBlocking(1000);
+        responseContent = "It looks like we already did a search in Pubmed Central previously.  We found 361 papers.  The next step will be to use AI to process all these papers and look for ones that show antigens that are overexpressed in that cancer.  Please press enter to continue";
+        res.json({ success: true, response: responseContent });
+        return;
+    }
+
+    if (sequence == "2") {
+        sleepBlocking(1000);
+        responseContent = "In our cached results we found a list of 581 possible antigens for this cancer using llama3.2, and have ranked them from most to least likely as an antigen suitable for BiTE.  The next step will be to develop a robotic laboratory procedure for Ginkgo Bioworks to run a phage display experiment that will generate antibodies to these antigens.  Please press enter to continue.";
+        res.json({ success: true, response: responseContent });
+        return;
+    }
+
+    if (sequence == "3") {
+        message = "Please write a detailed pseudocode implementation for Ginkgo Bioworks to run a phage-display experiment to find an antibody for a specific antigen that we have the sequence for.  This is to be used in a BiTE cancer therapy similar to tebentafusp.  We have many thousands of these sequences.";
+    }
+
+    if (sequence == "4") {
+        message = "Please write the draft of a patent for a new sequence for an engineered protein that is a BiTE cancer therapy drug.  Please put all XXX's in the sequence as a placeholder";
+    }
+
+    if (sequence == "5") {
+        message = "Please write a business plan for a company that will use Ginkgo Bioworks and phage display along with artificial intelligence and molecular modelling to develop a BiTE cancer therapy for IDH-wildtype glioblastoma.";
+    }
+    
     if (message) {
         doCompletion(message, (error, in_responseContent) => {
             if (error) {
@@ -64,6 +96,18 @@ app.post('/message', (req, res) => {
                 responseContent += "<br><br>" + "The next step will be to do a literature search for this cancer.  I will use Pubmed Central for this step.  Please press enter if that's OK";
             }
 
+            if (sequence == "3") {
+                responseContent += "<br><br>" + "The next step will be to generate patents for these sequences.  Please press enter if that's OK";
+            }
+
+            if (sequence == "4") {
+                responseContent += "<br><br>" + "The next step will be to generate a business plan for a company to commercialize this technology.  Please press enter if that's OK";
+            }
+
+            if (sequence == "5") {
+                responseContent += "<br><br>" + "This concludes our session, please let me know if you have any questions at all.";
+            }
+            
             res.json({ success: true, response: responseContent });
         });
     } else {
