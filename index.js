@@ -1,7 +1,9 @@
 const { OpenAI } = require("openai");
 
+require('dotenv').config();
+
 const baseURL = "https://api.aimlapi.com/v1";
-const apiKey = "my_key";
+const apiKey = process.env.AIML_API_KEY;
 const systemPrompt = "You are a travel agent. Be descriptive and helpful";
 const userPrompt = "Tell me about San Francisco";
 

@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.log(data);
                 messageInput.value = '';
                 const messageElement = document.createElement('div');
-                messageElement.textContent = data.response.text;
+                messageElement.textContent = data.response;
                 chat.appendChild(messageElement);
             } else {
                 alert('Error sending message: ' + data.error);
