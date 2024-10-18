@@ -27,13 +27,11 @@ app.post('/message', async (req: Request<{}, {}, MessageRequestBody>, res: Respo
     const { message } = req.body;
 
     if (message) {
-        // console.log(`Received message: ${message}`);
         try {
             const chat = await cohere.chat({
                 model: "command",
-                message, // Use the updated message received in the body
+                message,
             });
-            // console.log(chat);
             res.json({ success: true, response: chat });
         } catch (error) {
             console.error('Error during chat request:', error);
@@ -43,17 +41,6 @@ app.post('/message', async (req: Request<{}, {}, MessageRequestBody>, res: Respo
         res.status(400).json({ success: false, error: 'No message provided' });
     }
 })
-
-// app.post('/message', (req: Request<{}, {}, MessageRequestBody>, res: Response) => {
-//     const { message } = req.body;
-
-//     if (message) {
-//         console.log(`Received message: ${message}`);
-//         res.json({ success: true });
-//     } else {
-//         res.status(400).json({ success: false, error: 'No message provided' });
-//     }
-// });
 
 app.listen(PORT, () => {
     console.log(`Server is running at http://localhost:${PORT}`);
