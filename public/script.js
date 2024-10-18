@@ -3,6 +3,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const sendButton = document.getElementById('sendButton');
     const chat = document.getElementById('chat');
 
+    number = 0;
+
     function sendMessage() {
         const message = messageInput.value.trim();        
         if (message === '') {
@@ -13,6 +15,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const messageElement = document.createElement('div');
         messageElement.textContent = message;
         chat.appendChild(messageElement);
+
+        const out = number.toString() + message;
+
+        console.log("out=",out);
 
         fetch('/message', {
             method: 'POST',

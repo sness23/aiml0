@@ -1,6 +1,6 @@
-import express, { Request, Response } from 'express';
-import { OpenAI } from "openai";
-import { config } from 'dotenv';
+const express = require('express');
+const { OpenAI } = require('openai');
+const { config } = require('dotenv');
 
 config({ path: '.env.local' });
 
@@ -9,7 +9,7 @@ if (!process.env.AIML_API_KEY) {
 }
 
 const api = new OpenAI({
-    apiKey: process.env.AIML_API_KEY as string,
+    apiKey: process.env.AIML_API_KEY,
     baseURL: 'https://api.aimlapi.com/v1',
 });
 
@@ -20,11 +20,7 @@ app.use(express.json());
 
 app.use(express.static('public'));
 
-interface MessageRequestBody {
-    message?: string;
-}
-
-app.post('/message', async (req: Request<{}, {}, MessageRequestBody>, res: Response) => {
+app.post('/message', async (req, res) => {
     const { message } = req.body;
     
     if (message) {
@@ -41,7 +37,7 @@ app.post('/message', async (req: Request<{}, {}, MessageRequestBody>, res: Respo
                 max_tokens: 256,
             });
 
-            console.log("completion",completion);
+            console.log("completion", completion);
             const responseContent = completion.choices[0].message.content;
 
             res.json({ success: true, response: responseContent });
