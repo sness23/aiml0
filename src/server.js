@@ -21,8 +21,14 @@ app.use(express.json());
 app.use(express.static('public'));
 
 app.post('/message', async (req, res) => {
-    const { message } = req.body;
-    
+    let in_message = req.body.message;
+
+    console.log("in_message=",in_message);
+
+    let message = in_message.substring(1);
+
+    console.log("message",message);
+
     if (message) {
         try {
             const completion = await api.chat.completions.create({

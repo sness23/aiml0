@@ -6,26 +6,25 @@ document.addEventListener('DOMContentLoaded', () => {
     number = 0;
 
     function sendMessage() {
-        const message = messageInput.value.trim();        
-        if (message === '') {
+        const in_message = messageInput.value.trim();        
+        if (in_message === '') {
             alert('Please enter a message.');
             return;
         }
 
         const messageElement = document.createElement('div');
-        messageElement.textContent = message;
+        messageElement.textContent = in_message;
         chat.appendChild(messageElement);
 
-        const out = number.toString() + message;
-
-        console.log("out=",out);
-
+        const message = number.toString() + in_message;
+        number += 1;
+        
         fetch('/message', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ message })
+            body: JSON.stringify({message})
         })
         .then(response => response.json())
         .then(data => {
