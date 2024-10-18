@@ -17,10 +17,11 @@ const app = express();
 const PORT = 4000;
 
 app.use(express.json());
+
 app.use(express.static('public'));
 
-function doCompletion(message, callback) {
-    api.chat.completions.create({
+async function doCompletion(message) {
+    const completion = await api.chat.completions.create({
         model: "meta-llama/Llama-3.2-3B-Instruct-Turbo",
         messages: [
             {
@@ -28,19 +29,20 @@ function doCompletion(message, callback) {
                 content: message,
             },
         ],
-        temperature: 0.7,
-        max_tokens: 10000
-    }).then(completion => {
-        console.log(completion);
-        const in_responseContent = completion.choices[0].message.content;
-        console.log("in_responseContent=", in_responseContent);
-        callback(null, in_responseContent);
-    }).catch(error => {
-        callback(error);
+        temperature: 0.7
     });
+
+    console.log(completion);
+
+    const in_responseContent = completion.choices[0].message.content;
+
+    console.log("in_responseContent=",in_responseContent);
+    
+    return in_responseContent;
 }
 
-app.post('/message', (req, res) => {
+
+app.post('/message', async (req, res) => {
     let in_message = req.body.message;
     let pre_message = in_message.substring(1);
     let sequence = in_message.charAt(0);
@@ -51,21 +53,21 @@ app.post('/message', (req, res) => {
         message = "Please give a detailed overview in a conversational style for an expert scientist of the cancer IDH-wildtype glioblastoma";
     }
 
+    console.log("message=",message);
+    
     if (message) {
-        doCompletion(message, (error, in_responseContent) => {
-            if (error) {
-                console.error('Error during chat request:', error);
-                return res.status(500).json({ success: false, error: 'Internal server error' });
-            }
-
-            let responseContent = in_responseContent;
+        try {
+            const in_responseContent = doCompletion(message);
             
             if (sequence == "0") {
-                responseContent += "<br><br>" + "The next step will be to do a literature search for this cancer.  I will use Pubmed Central for this step.  Please press enter if that's OK";
+                responseContent = in_responseContent + "<br><br>" + "The next step will be to do a literature search for this cancer.  I will use Pubmed Central for this step.  Please press enter if that's OK";
             }
 
             res.json({ success: true, response: responseContent });
-        });
+        } catch (error) {
+            console.error('Error during chat request:', error);
+            res.status(500).json({ success: false, error: 'Internal server error' });
+        }
     } else {
         res.status(400).json({ success: false, error: 'No message provided' });
     }

@@ -6,10 +6,9 @@ document.addEventListener('DOMContentLoaded', () => {
     number = 0;
 
     function sendMessage() {
-        const in_message = messageInput.value.trim();        
+        let in_message = messageInput.value.trim();        
         if (in_message === '') {
-            alert('Please enter a message.');
-            return;
+            in_message = ' ';
         }
 
         const messageElement = document.createElement('div');
